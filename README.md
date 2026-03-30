@@ -1,6 +1,8 @@
 # Mini Social
 
-A monorepo containing both backend and frontend for the Mini Social application.
+**Mini Social** is a minimalist social media platform where users can share posts, discover content, and connect with others. It features user authentication, a live post feed with moments/stories, post creation, and social interactions (likes, comments, bookmarks, and shares). The platform is designed around quality and simplicity, making it easy to share ideas and stay connected.
+
+This repository is a monorepo containing both the backend and frontend for the Mini Social application.
 
 ## Project Structure
 
