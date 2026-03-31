@@ -1,4 +1,43 @@
+'use client';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
 const Signup = () => {
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [pending, isPending] = useState(false);
+    const router = useRouter();
+
+    const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        isPending(true);
+
+        try {
+            const response = await fetch("/api/users/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name: fullName, email, password }),
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                toast.error(data.error || "Signup failed");
+                return;
+            }
+            toast.success("Account created successfully! Please log in.");
+            router.replace("/login");
+            router.refresh();
+            isPending(false);
+        } catch (error) {
+            console.error("Error signing up:", error);
+            isPending(false);
+        }
+    }
+
     return (
         <div className="grid min-h-[80vh] w-full max-w-7xl grid-cols-1 overflow-hidden rounded-2xl lg:grid-cols-2">
             <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-indigo-600 to-violet-500 p-12 lg:flex">
@@ -34,30 +73,30 @@ const Signup = () => {
                         <h2 className="headline-font mb-1 text-2xl font-extrabold tracking-tight text-on-surface">Create your account</h2>
                         <p className="text-sm text-on-surface-variant">Step into the Curated Cloud today.</p>
                     </div>
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={submitHandler}>
                         <div className="space-y-1.5">
                             <label className="ml-1 block text-xs font-semibold text-on-surface-variant font-label" htmlFor="fullName">Full Name</label>
                             <div className="group relative">
-                                <input className="w-full rounded-md border-none bg-surface-container-low px-4 py-3 pl-11 font-body text-on-surface placeholder:text-outline-variant/60 transition-all focus:ring-2 focus:ring-primary/20" id="fullName" name="fullName" placeholder="Alex Rivers" type="text" />
+                                <input className="w-full rounded-md border-none bg-surface-container-low px-4 py-3 pl-11 font-body text-on-surface placeholder:text-outline-variant/60 transition-all focus:ring-2 focus:ring-primary/20" id="fullName" name="fullName" placeholder="Alex Rivers" type="text" value={fullName} onChange={(e) => { setFullName(e.target.value) }} />
                                 <span className="material-symbols-outlined absolute top-1/2 left-3.5 -translate-y-1/2 text-[20px] text-outline-variant transition-colors group-focus-within:text-primary">person</span>
                             </div>
                         </div>
                         <div className="space-y-1.5">
                             <label className="ml-1 block text-xs font-semibold text-on-surface-variant font-label" htmlFor="email">Email address</label>
                             <div className="group relative">
-                                <input className="w-full rounded-md border-none bg-surface-container-low px-4 py-3 pl-11 font-body text-on-surface placeholder:text-outline-variant/60 transition-all focus:ring-2 focus:ring-primary/20" id="email" name="email" placeholder="alex@gmail.com" type="email" />
+                                <input className="w-full rounded-md border-none bg-surface-container-low px-4 py-3 pl-11 font-body text-on-surface placeholder:text-outline-variant/60 transition-all focus:ring-2 focus:ring-primary/20" id="email" name="email" placeholder="alex@gmail.com" type="email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
                                 <span className="material-symbols-outlined absolute top-1/2 left-3.5 -translate-y-1/2 text-[20px] text-outline-variant transition-colors group-focus-within:text-primary">mail</span>
                             </div>
                         </div>
                         <div className="space-y-1.5">
                             <label className="ml-1 block text-xs font-semibold text-on-surface-variant font-label" htmlFor="password">Password</label>
                             <div className="group relative">
-                                <input className="w-full rounded-md border-none bg-surface-container-low px-4 py-3 pl-11 font-body text-on-surface placeholder:text-outline-variant/60 transition-all focus:ring-2 focus:ring-primary/20" id="password" name="password" placeholder="••••••••" type="password" />
+                                <input className="w-full rounded-md border-none bg-surface-container-low px-4 py-3 pl-11 font-body text-on-surface placeholder:text-outline-variant/60 transition-all focus:ring-2 focus:ring-primary/20" id="password" name="password" placeholder="••••••••" type="password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
                                 <span className="material-symbols-outlined absolute top-1/2 left-3.5 -translate-y-1/2 text-[20px] text-outline-variant transition-colors group-focus-within:text-primary">lock</span>
                             </div>
                         </div>
                         <button className="headline-font mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary-container px-6 py-4 font-bold text-on-primary shadow-lg shadow-indigo-200 transition-all active:scale-95" type="submit">
-                            Create account
+                            {pending ? "Creating account..." : "Create account"}
                             <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
                         </button>
                     </form>

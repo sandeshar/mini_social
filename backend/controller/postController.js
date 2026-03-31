@@ -24,13 +24,15 @@ export const getAllPost = async (req, res) => {
 }
 
 export const createPost = async (req, res) => {
-    const { title, content } = req.body;
+    const { narrative, imageURL, isPublic, feeling } = req.body;
     const author = req.user;
     try {
         const post = await prisma.post.create({
             data: {
-                title: title,
-                content: content,
+                narrative: narrative,
+                imageURL: imageURL,
+                isPublic: isPublic,
+                feeling: feeling,
                 authorId: author.id
             },
         })
