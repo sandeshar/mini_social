@@ -5,7 +5,7 @@ export default function CreatePage() {
     return (
         <main className="mx-auto max-w-3xl px-4 pb-32 pt-24">
             <div className="mb-8 flex items-center justify-between">
-                <Link 
+                <Link
                     href="/"
                     className="rounded-full p-2 transition-colors hover:bg-surface-container-high"
                 >
