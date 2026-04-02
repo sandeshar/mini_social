@@ -12,3 +12,14 @@ export const checkAuth = (req, res, next) => {
     req.user = decoded;
     next();
 }
+
+export const optionalAuth = (req, res, next) => {
+    const token = req.signedCookies?.token;
+    if (token) {
+        const decoded = verifyJwt(token);
+        if (decoded) {
+            req.user = decoded;
+        }
+    }
+    next();
+}

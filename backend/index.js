@@ -7,6 +7,7 @@ const app = express();
 const PORT = 3001;
 
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser("secret"));
 

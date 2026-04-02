@@ -1,11 +1,15 @@
 import express from 'express';
-import { createPost, getAllPost, getPost } from '../controller/postController';
-import { checkAuth } from '../middleware/authCheck';
+import { canEditOrDelete, createPost, deletePost, getAllPost, getPost, updatePost } from '../controller/postController';
+import { checkAuth, optionalAuth } from '../middleware/authCheck';
+import { upload } from '../lib/multer';
 
 const postRouter = express.Router();
 
-postRouter.get('/', getAllPost)
+postRouter.get('/canEdit/:id', checkAuth, canEditOrDelete);
+postRouter.get('/', optionalAuth, getAllPost)
 postRouter.get('/:id', getPost)
-postRouter.post('/', checkAuth, createPost)
+postRouter.post('/', checkAuth, upload.single('imageURL'), createPost)
+postRouter.put('/:id', checkAuth, upload.single('imageURL'), updatePost)
+postRouter.delete('/:id', checkAuth, deletePost);
 
 export default postRouter;
